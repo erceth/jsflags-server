@@ -1,0 +1,17 @@
+#games {
+    width: 100px;
+    margin: auto;
+    border: 1px solid black;
+}
+
+.button {
+	cursor: pointer;
+}
+
+.button.active {
+	border: 1px solid red;
+}
+
+.button.available {
+	border: 1px dotted black;
+}
