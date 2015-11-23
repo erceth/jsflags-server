@@ -9,7 +9,11 @@ function AppCtrl($scope) {
     socket.on('options', function(options) {
         $scope.activeGames = options.games;
         var availableGames = options.numberOfAllowedGames - options.games.length;
-        $scope.availableGames = new Array(availableGames);
+        $scope.availableGames = [];
+        for (var i = 0; i < availableGames; i++) {
+        	$scope.availableGames.push({});
+        }
+        $scope.gameModes = options.gameModes;
         updateScope();
     });
 
@@ -17,8 +21,8 @@ function AppCtrl($scope) {
     /**
      * function to run when join game button is clicked
      */
-    $scope.createGame = function() {
-        socket.emit('createGame');
+    $scope.createGame = function(mode) {
+        socket.emit('createGame', {mode: mode});
     }
 
     function updateScope() {

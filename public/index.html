@@ -10,12 +10,16 @@
 
 <body ng-controller="AppCtrl">
     <div id='games'>
-        <div ng-repeat="g in activeGames" class='button active'>
+        <div ng-repeat="g in activeGames" class='game-slot active'>
             Join {{g}}
         </div>
-        <div ng-repeat="g in availableGames track by $index" ng-click='g.show = !g.show' class='button available'><span>Create Game</span>
-            <div ng-show='g.show'> more!
-                <span ng-click='createGame()'>Create game</span>
+        <div ng-repeat="g in availableGames track by $index" class='game-slot available'><span ng-click='g.show = !g.show' class='create-game'>Create Game</span>
+            <div ng-show='g.show'>
+            	<div>
+            		<span class='button' ng-repeat='gm in gameModes' ng-click='g.mode = gm.modeId' ng-class='{selected: g.mode === gm.modeId}'>{{gm.name}}</span>
+            	</div>
+
+                <span ng-show='g.mode >= 0' class='button primary-button' ng-click='createGame(g.mode)'>Create game</span>
             </div>
         </div>
     </div>

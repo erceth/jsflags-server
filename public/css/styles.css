@@ -1,17 +1,42 @@
 #games {
-    width: 100px;
     margin: auto;
     border: 1px solid black;
 }
 
-.button {
+.game-slot {
 	cursor: pointer;
 }
 
-.button.active {
+.game-slot.active {
 	border: 1px solid red;
 }
 
-.button.available {
+.game-slot.available {
 	border: 1px dotted black;
+}
+
+
+/* General Button */
+.button {
+	padding: 5px;
+	margin: 5px;
+	background-color: #eee;
+	border-radius: 5px;
+	border: 1px solid black;
+	white-space: nowrap;
+    display: inline-block;
+}
+
+.button.selected {
+	background-color: blue;
+	color: #fff;
+}
+
+.button.primary-button {
+	background-color: green;
+}
+
+.create-game {
+    display: block;
+    text-align: center;
 }
