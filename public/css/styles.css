@@ -1,3 +1,50 @@
+#site-container {
+	background-color: #333;
+	position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
+
+/*.pulse-site-background {
+	animation-duration: 18s;
+	animation-name: pulse-background;
+	animation-direction: alternate;
+	animation-iteration-count: infinite;
+}
+
+@keyframes pulse-background {
+	0% {
+		-webkit-box-shadow: inset 0px 0px 50px 0px rgba(0,0,0,0);
+		-moz-box-shadow: inset 0px 0px 50px 0px rgba(0,0,0,0);
+		box-shadow: inset 0px 0px 50px 0px rgba(0,0,0,0);
+		background-color: #f00;
+
+	}
+	100% {
+		-webkit-box-shadow: inset 0px 0px 50px 0px rgba(0,0,0,0.75);
+		-moz-box-shadow: inset 0px 0px 50px 0px rgba(0,0,0,0.75);
+		box-shadow: inset 0px 0px 50px 0px rgba(0,0,0,0.75);
+		background-color: #d00;
+	}
+}*/
+
+.content {
+    border: 1px solid black;
+    margin: 50px;
+    padding: 50px;
+    -webkit-box-shadow: 5px 5px 15px 0px rgba(0,0,0,0.75);
+	-moz-box-shadow: 5px 5px 15px 0px rgba(0,0,0,0.75);
+	box-shadow: 5px 5px 15px 0px rgba(0,0,0,0.75);
+	background-color: #ddd;
+
+}
+
+#main-title {
+	text-align: center;
+}
+
 #games {
     margin: auto;
     border: 1px solid black;
