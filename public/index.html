@@ -15,7 +15,7 @@
             <h1 id='main-title'>JSFlags Game Server</h1>
             <div id='games'>
                 <div ng-repeat="g in activeGames" class='game-slot active'>
-                    Join {{g}}
+                	<a href='' ng-click='joinGame(g.port)'>Join {{g.getNumPlayersConnected}}/{{g.getMaxNumPlayers}}</a>
                 </div>
                 <div ng-repeat="g in availableGames track by $index" class='game-slot available'><span ng-click='g.show = !g.show' class='create-game'>Create Game</span>
                     <div ng-show='g.show'>

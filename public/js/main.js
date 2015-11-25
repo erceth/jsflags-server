@@ -4,7 +4,7 @@ function config() {
 
 }
 
-function AppCtrl($scope) {
+function AppCtrl($scope, $location, $window) {
     var socket = io();
     socket.on('options', function(options) {
         $scope.activeGames = options.games;
@@ -29,6 +29,10 @@ function AppCtrl($scope) {
         if (!$scope.$$phase) {
             $scope.$apply();
         }
+    }
+
+    $scope.joinGame = function(port) {
+    	$window.open('http://' + $location.host() + ':' + port, '_blank');
     }
 
 
