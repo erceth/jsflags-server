@@ -32,6 +32,12 @@ if (process.argv[2]) {
 	playerSelection = parseInt(process.argv[2], 10);
 }
 
+//know when to quit
+process.on('message', function(m) {
+	if (m.exit) {
+		process.exit();	
+	}
+});
 
 socket.on("init", function(initD) {
 	if (connected) {

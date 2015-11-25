@@ -67,6 +67,9 @@ Game.prototype = {
 
 		this.instance.on('exit', function(m) {
 			main.deleteGame(self.id);
+			if (self.aiInstance) {
+				self.aiInstance.send({'exit': true});	
+			}
 		});
 
 	},
