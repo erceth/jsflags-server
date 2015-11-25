@@ -138,7 +138,7 @@ var main = (function() {
     		];
     		var newInstance = childProcess.fork(__dirname + '/jsflags/index.js', forkOptions, 
     		{
-    			cwd: __dirname + '/jsflags'
+    			cwd: './jsflags'
     		});
     		newGame.addInstance(newInstance);
     		if (mode.AICount > 0) {
@@ -149,7 +149,7 @@ var main = (function() {
 	    		];
     			newGame.aiInstance = childProcess.fork(__dirname + '/jsflags-ai/index.js', aiForkOptions, 
     			{
-	    			cwd: __dirname + '/jsflags-ai'
+	    			cwd: './jsflags-ai'
 	    		});
     		}
 	    		
