@@ -361,16 +361,17 @@ ManualControls.prototype = {
 			var buttonWrapper = $("#button-wrapper");
 		    buttonWrapper.empty();
 		    for (var i = 0; i < self.initData.players.length; i++) {
-		        var button = $("<span data-player-index='" + i + "' class='player-button' style='background-color:" + self.initData.players[i].playerColor + " '>Player Number " + self.initData.players[i].playerNumber + "</span>").click(function() {
-		            var playerIndex = $(this).data("player-index");
-		            self.playerSocket = io("/" + self.initData.players[playerIndex].namespace);
-		            self.color = self.initData.players[playerIndex].playerColor;
-		            $('#selector').addClass(self.color);
-		            $(this).off();  //prevents multiple clicks
-		            callback();
-		        });
-		        buttonWrapper.append(button);
-
+		    	if (!self.initData.players[i].connected) {
+		    		var button = $("<span data-player-index='" + i + "' class='player-button' style='background-color:" + self.initData.players[i].playerColor + " '>Player Number " + self.initData.players[i].playerNumber + "</span>").click(function() {
+			            var playerIndex = $(this).data("player-index");
+			            self.playerSocket = io("/" + self.initData.players[playerIndex].namespace);
+			            self.color = self.initData.players[playerIndex].playerColor;
+			            $('#selector').addClass(self.color);
+			            $(this).off();  //prevents multiple clicks
+			            callback();
+			        });
+			        buttonWrapper.append(button);
+		    	}
 		    }
 
 		    //add observer button

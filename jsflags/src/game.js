@@ -105,17 +105,15 @@ Game.prototype = {
 		var self = this;
 		var modifiedPlayers = [];
 		for (var i = 0; i < self.Players.length; i++) { //TODO: use array.map
-			if (!self.Players[i].connected) {
-				var modifiedPlayer = {
-					playerColor: self.Players[i].playerColor,
-					playerNumber: self.Players[i].playerNumber,
-					namespace: self.Players[i].namespace,
-					base: self.Players[i].base
-				};
-				
-				modifiedPlayers.push(modifiedPlayer);
-			}
+			var modifiedPlayer = {
+				connected: self.Players[i].connected,
+				playerColor: self.Players[i].playerColor,
+				playerNumber: self.Players[i].playerNumber,
+				namespace: self.Players[i].namespace,
+				base: self.Players[i].base
+			};
 			
+			modifiedPlayers.push(modifiedPlayer);
 
 		}
 
