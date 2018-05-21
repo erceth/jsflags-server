@@ -13,12 +13,11 @@ var http = require('http').Server(app);
 var io = require('socket.io')(http);
 var childProcess = require('child_process')
 
+// TODO: extract into config file
 var options = {
 	maxNumberOfGames: 2,
     port: commandlineArgs.port || 9000
 };
-
-console.log(options)
 
 app.get('/', function(req, res) {
     res.sendFile(__dirname + "/public/index.html");
@@ -37,49 +36,50 @@ http.listen(options.port, function() {
 });
 
 
-var Game = function() {
-	this.available = true;
-	this.port = main.getNextPort(options.port);
-	this.id = Math.random().toString(36).substr(2);
-	this.instance = null;
-	this.aiInstance = null;
-	this.maxNumPlayers = 0;
-	this.numPlayersConnected = 0;
-}
-
-Game.prototype = {
-	getId: function() {
+class Game {
+	constructor(gameMode) {
+		this.AICount = gameMode.AICount
+		this.map = gameMode.map
+		this.name = gameMode.name
+		this.modeId = gameMode.modeId
+		this.available = true;
+		this.port = main.getNextPort(options.port);
+		this.id = Math.random().toString(36).substr(2);
+		this.instance = null;
+		this.aiInstance = null;
+		this.maxNumPlayers = 0;
+		this.numPlayersConnected = 0;
+	}
+	getId () {
 		return this.id;
-	},
-	addInstance: function(instance) {
-		this.instance = instance;
-		this.listenToInstance();
-	},
-	listenToInstance: function() {
-		var self = this;
-		this.instance.on('message', function(m) {
-			if (m['join/leave']) {
-				self.maxNumPlayers = m['join/leave'].maxNumPlayers;
-				self.numPlayersConnected = m['join/leave'].numPlayersConnected;
+	}
+	listenToInstance() {
+		this.instance.on('message', (m) => {
+			let jl = m['join/leave']
+			if (jl) {
+				if (jl.leave && this.numPlayersConnected <= this.AICount) {
+					this.killGame()
+				}
+				this.maxNumPlayers = jl.maxNumPlayers;
+				this.numPlayersConnected = jl.numPlayersConnected;
 				main.sendOptions();
 			}
 		});
-
-		this.instance.on('exit', function(m) {
-			main.deleteGame(self.id);
-			if (self.aiInstance) {
-				self.aiInstance.send({'exit': true});	
-			}
-		});
-
-	},
-	getMaxNumPlayers: function() {
+	}
+	killGame() {
+		this.instance.kill('SIGINT');
+		if (this.aiInstance) {
+			this.aiInstance.kill('SIGINT');
+		}
+		main.deleteGame(this.id);
+	}
+	getMaxNumPlayers() {
 		return this.maxNumPlayers;
-	},
-	getNumPlayersConnected: function() {
+	}
+	getNumPlayersConnected() {
 		return this.numPlayersConnected;
 	}
-};
+}
 
 
 /*** main ***/
@@ -91,7 +91,7 @@ var main = (function() {
     	{name:'Human vs. Human', modeId: 0, map: 'one_vs_one.json', AICount: 0},
     	{name:'Four Human FFA - obstacles', modeId: 1, map: 'square.json', AICount: 0},
     	{name:'Four Human FFA - no obstacles', modeId: 2, map: 'plain_field.json', AICount: 0},
-    	{name:'Human vs. Impossible AI', modeId: 3, map: 'one_vs_one.json', AICount: 1}
+    	{name:'Human vs. AI', modeId: 3, map: 'one_vs_one.json', AICount: 1}
     ]
 
     // FOR DEVELOPMENT
@@ -128,31 +128,31 @@ var main = (function() {
 
     function createGame(newGameOptions) {
     	if (games.length + 1 <= options.maxNumberOfGames) {
-    		var newGame = new Game();
+    		var newGame = new Game(gameModes[newGameOptions.mode]);
     		games.push(newGame);
-    		var mode = gameModes[newGameOptions.mode];
     		var forkOptions = [
-    			'map=' + mode.map, 
-    			'port=' + newGame.port,
-    			'AICount=' + mode.AICount
+    			'map=' + newGame.map, 
+    			'port=' + newGame.port
     		];
-    		var newInstance = childProcess.fork(__dirname + '/jsflags/index.js', forkOptions, 
+    		var newInstance = childProcess.fork('index.js', forkOptions, 
     		{
-    			cwd: './jsflags'
-    		});
-    		newGame.addInstance(newInstance);
-    		if (mode.AICount > 0) {
+    			cwd: './node_modules/jsflags/'
+				});
+				
+				newGame.instance = newInstance;
+				newGame.listenToInstance()
+				
+    		if (newGame.AICount > 0) {
     			var aiForkOptions = [
 	    			'0', //player number //TODO: choose AI number
-	    			'port=' + newGame.port
-
+	    			newGame.port
 	    		];
-    			newGame.aiInstance = childProcess.fork(__dirname + '/jsflags-ai/index.js', aiForkOptions, 
+					newGame.aiInstance = childProcess.fork('index.js', aiForkOptions, 
     			{
-	    			cwd: './jsflags-ai'
-	    		});
-    		}
-	    		
+	    			cwd: './node_modules/jsflags-ai/'
+					});
+				}
+				
     		sendOptions();
     	}
     }
