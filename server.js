@@ -31,6 +31,19 @@ app.get('/css/styles.css', function(req, res) {
     res.sendFile(__dirname + "/public/css/styles.css");
 });
 
+//lib
+app.get('/js/socket.io-1.7.4.min.js', function(req, res) {
+	res.sendFile(__dirname + "/public/js/socket.io-1.7.4.min.js");
+});
+
+app.get('/css/normalize-3.0.3.min.css', function(req, res) {
+	res.sendFile(__dirname + "/public/css/normalize-3.0.3.min.css");
+});
+
+app.get('/js/angular-1.3.15.min.js', function(req, res) {
+	res.sendFile(__dirname + "/public/js/angular-1.3.15.min.js");
+});
+
 http.listen(options.port, function() {
     console.log('listening on *:' + options.port);
 });
